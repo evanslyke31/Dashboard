@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Dashboard.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Dashboard
 {
@@ -24,6 +26,13 @@ namespace Dashboard
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            //
+            services.AddDbContext<MovieContext>(options =>
+            options.UseSqlServer(Configuration.GetConnectionString("MovieContext")));
+
+            services.AddDbContext<MovieContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MovieContext")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
