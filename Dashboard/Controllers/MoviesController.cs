@@ -52,6 +52,9 @@ namespace Dashboard.Controllers
         }
 
         // GET: Movies/Details/5 or /Movies/Details?id=5
+        //Performing a delete operation in response to a GET request 
+        //(or for that matter, performing an edit operation, create operation, 
+        //or any other operation that changes data) opens up a security hole.
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
