@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dashboard.Data;
 using Dashboard.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGeneration.Contracts.Messaging;
+using Newtonsoft.Json;
 
 namespace Dashboard.Controllers
 {
@@ -21,6 +23,11 @@ namespace Dashboard.Controllers
         }
         public ActionResult Index()
         {
+            if(HttpContext.Session.GetString("user") != null)
+            {
+                HttpContext.Session.Clear();
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -66,7 +73,8 @@ namespace Dashboard.Controllers
             }
 
             user.Password = "";
-            return View("Panel", user);
+            HttpContext.Session.SetString("user", JsonConvert.SerializeObject(user));
+            return RedirectToAction("Index", "Home");
         }
 
     }

@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Dashboard.Models;
+using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace Dashboard.Controllers
 {
@@ -20,6 +22,15 @@ namespace Dashboard.Controllers
 
         public IActionResult Index()
         {
+            var objString = HttpContext.Session.GetString("user");
+            if(objString != null)
+            {
+                var user = JsonConvert.DeserializeObject<User>(objString);
+                ViewData["username"] = user.Username;
+            } else
+            {
+                ViewData["username"] = "please log in to have access";
+            }
             return View();
         }
 

@@ -19,7 +19,7 @@
 
 .txtbox {
     height: 30px;
-    width: 90%;
+    width: 80%;
     font-size: 25px;
     border-radius: 5px;
 }
@@ -88,8 +88,12 @@
 }
 
 .active {
-    background: #be0000;
+    background: #212121;
     color: white;
+}
+
+button:focus {
+    outline: 0;
 }
 
 .inpt {
@@ -103,6 +107,10 @@
 @media (max-width:1000px) {
     .container {
         width: 90vw;
+    }
+
+    .txtbox {
+        width: 90%;
     }
 }
 
@@ -118,6 +126,7 @@
     .txtbox {
         height: 3vh;
         font-size: 2vh;
+        width: 60%;
     }
 
     .button {
