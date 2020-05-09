@@ -28,6 +28,10 @@ namespace Dashboard.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id","Username","Password")] User user)
         {
+            if (user.Username == null || user.Password == null)
+            {
+                return View("Index");
+            }
             var account = await _context.User
                 .FirstOrDefaultAsync(m => m.Username == user.Username);
             if(account != null)
@@ -50,7 +54,7 @@ namespace Dashboard.Controllers
         {
             if (user.Username == null || user.Password == null)
             {
-                return NotFound();
+                return View("Index");
             }
 
             var account = await _context.User

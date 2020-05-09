@@ -6,14 +6,12 @@
 
 .item {
     margin: 10px;
-    top: 50%;
-    left: 50%;
+    text-align: center;
     
 }
 
 .lbl {
     color: white;
-    float: left;
     margin-left: 5%;
     font-family: Arial;
     font-size: 20px;
@@ -28,28 +26,42 @@
 
 .submit {
     width: 30%;
+    border-radius: 5px;
+}
+
+.submitcontainer {
+    text-align: right;
+}
+
+#createbtn {
+    width: 50%;
+    float: left;
+    top: 0px;
+    border-radius: 15px 0px 0px 0px;
+}
+
+#loginbtn {
+    width: 50%;
+    float: right;
+    top: 0px;
+    border-radius: 0px 15px 0px 0px;
 }
 
 .button {
-    background-color: #4CAF50; /* Green */
+    background-color: #e0e0e0;
     border: none;
     color: white;
     padding: 10px 10px;
-    text-align: center;
     text-decoration: none;
     display: inline-block;
     font-size: 20px;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
     cursor: pointer;
-    border-radius: 5px;
+    color: #828282;
 }
 
 .green:hover {
     background-color: white;
     color: black;
-    margin: 2px 0px;
-    border: 2px solid #4CAF50;
 }
 
 .green {
@@ -60,8 +72,6 @@
 .blue:hover {
     background-color: white;
     color: black;
-    margin: 2px 0px;
-    border: 2px solid #008CBA;
 }
 
 .blue {
@@ -71,7 +81,46 @@
 
 .container {
     border-radius: 15px;
-    padding: 25px;
+    padding: 0px;
     background-color: #212121;
     box-shadow: 7px 7px 5px 5px #aaaaaa;
+    width: 30vw;
+}
+
+.active {
+    background: #be0000;
+    color: white;
+}
+
+.inpt {
+    padding: 50px 10px 10px 10px;
+}
+
+.validate {
+    display: inline-block;
+}
+
+@media (max-width:1000px) {
+    .container {
+        width: 90vw;
+    }
+}
+
+@media (min-width:2000px) {
+    .container {
+        width: 40vw;
+    }
+
+    .lbl {
+        font-size: 2vh;
+    }
+
+    .txtbox {
+        height: 3vh;
+        font-size: 2vh;
+    }
+
+    .button {
+        height: 5vh;
+    }
 }
