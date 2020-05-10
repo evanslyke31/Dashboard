@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Dashboard.Data;
 using Dashboard.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +28,7 @@ namespace Dashboard.Controllers
             if(HttpContext.Session.GetString("user") != null)
             {
                 HttpContext.Session.Clear();
+                HttpContext.SignOutAsync();
                 return RedirectToAction("Index", "Home");
             }
             return View();
@@ -74,6 +77,18 @@ namespace Dashboard.Controllers
 
             user.Password = "";
             HttpContext.Session.SetString("user", JsonConvert.SerializeObject(user));
+
+            var accountClaims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, account.Username)
+            };
+
+            var userIdentity = new ClaimsIdentity(accountClaims, "User Identity");
+
+            var userPrincipal = new ClaimsPrincipal(new[] { userIdentity });
+
+            HttpContext.SignInAsync(userPrincipal);
+
             return RedirectToAction("Index", "Home");
         }
 

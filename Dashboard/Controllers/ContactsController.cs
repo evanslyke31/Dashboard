@@ -9,54 +9,25 @@ using Dashboard.Data;
 using Dashboard.Models;
 using Microsoft.AspNetCore.Authorization;
 
-
-//created through scaffolding
 namespace Dashboard.Controllers
 {
-    public class MoviesController : Controller
+    public class ContactsController : Controller
     {
-        private readonly MovieContext _context;
+        private readonly ContactContext _context;
 
-        public MoviesController(MovieContext context)
+        public ContactsController(ContactContext context)
         {
             _context = context;
         }
 
-        // GET: Movies
+        // GET: Contacts
         [Authorize]
-        public async Task<IActionResult> Index(string movieGenre, string searchString)
+        public async Task<IActionResult> Index()
         {
-            // Use LINQ to get list of genres.
-            IQueryable<string> genreQuery = from m in _context.Movie
-                                            orderby m.Genre
-                                            select m.Genre;
-
-            var movies = from m in _context.Movie
-                         select m;
-
-            if (!string.IsNullOrEmpty(searchString))
-            {
-                movies = movies.Where(s => s.Title.Contains(searchString));
-            }
-
-            if (!string.IsNullOrEmpty(movieGenre))
-            {
-                movies = movies.Where(x => x.Genre == movieGenre);
-            }
-
-            var movieGenreVM = new MovieGenreViewModel
-            {
-                Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
-                Movies = await movies.ToListAsync()
-            };
-
-            return View(movieGenreVM);
+            return View(await _context.Contact.ToListAsync());
         }
 
-        // GET: Movies/Details/5 or /Movies/Details?id=5
-        //Performing a delete operation in response to a GET request 
-        //(or for that matter, performing an edit operation, create operation, 
-        //or any other operation that changes data) opens up a security hole.
+        // GET: Contacts/Details/5
         [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
@@ -65,41 +36,41 @@ namespace Dashboard.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
+            var contact = await _context.Contact
+                .FirstOrDefaultAsync(m => m.ContactId == id);
+            if (contact == null)
             {
                 return NotFound();
             }
 
-            return View(movie);
+            return View(contact);
         }
 
-        // GET: Movies/Create
+        // GET: Contacts/Create
         [Authorize]
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Movies/Create
+        // POST: Contacts/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        public async Task<IActionResult> Create([Bind("ContactId,Name,Address,City,State,Zip,Email")] Contact contact)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(movie);
+                _context.Add(contact);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(movie);
+            return View(contact);
         }
 
-        // GET: Movies/Edit/5
+        // GET: Contacts/Edit/5
         [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
@@ -108,23 +79,23 @@ namespace Dashboard.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie.FindAsync(id);
-            if (movie == null)
+            var contact = await _context.Contact.FindAsync(id);
+            if (contact == null)
             {
                 return NotFound();
             }
-            return View(movie);
+            return View(contact);
         }
 
-        // POST: Movies/Edit/5
+        // POST: Contacts/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [Authorize]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,Genre,Price,Rating")] Movie movie)
+        [Authorize]
+        public async Task<IActionResult> Edit(int id, [Bind("ContactId,Name,Address,City,State,Zip,Email")] Contact contact)
         {
-            if (id != movie.Id)
+            if (id != contact.ContactId)
             {
                 return NotFound();
             }
@@ -133,12 +104,12 @@ namespace Dashboard.Controllers
             {
                 try
                 {
-                    _context.Update(movie);
+                    _context.Update(contact);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!MovieExists(movie.Id))
+                    if (!ContactExists(contact.ContactId))
                     {
                         return NotFound();
                     }
@@ -149,10 +120,10 @@ namespace Dashboard.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(movie);
+            return View(contact);
         }
 
-        // GET: Movies/Delete/5
+        // GET: Contacts/Delete/5
         [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
@@ -161,31 +132,31 @@ namespace Dashboard.Controllers
                 return NotFound();
             }
 
-            var movie = await _context.Movie
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (movie == null)
+            var contact = await _context.Contact
+                .FirstOrDefaultAsync(m => m.ContactId == id);
+            if (contact == null)
             {
                 return NotFound();
             }
 
-            return View(movie);
+            return View(contact);
         }
 
-        // POST: Movies/Delete/5
+        // POST: Contacts/Delete/5
         [HttpPost, ActionName("Delete")]
-        [Authorize]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = await _context.Movie.FindAsync(id);
-            _context.Movie.Remove(movie);
+            var contact = await _context.Contact.FindAsync(id);
+            _context.Contact.Remove(contact);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool MovieExists(int id)
+        private bool ContactExists(int id)
         {
-            return _context.Movie.Any(e => e.Id == id);
+            return _context.Contact.Any(e => e.ContactId == id);
         }
     }
 }

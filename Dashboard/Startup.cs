@@ -25,11 +25,19 @@ namespace Dashboard
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication("CookieAuth")
+                .AddCookie("CookieAuth", config =>
+                {
+                    config.Cookie.Name = "userauth";
+                    config.LoginPath = "/Users";
+                    config.ExpireTimeSpan = TimeSpan.FromMinutes(10);
+                });
+
             services.AddDistributedMemoryCache();
 
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
+                options.IdleTimeout = TimeSpan.FromMinutes(10);
                 options.Cookie.HttpOnly = true;
                 options.Cookie.IsEssential = true;
             });
@@ -40,8 +48,8 @@ namespace Dashboard
             services.AddDbContext<MovieContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("MovieContext")));
 
-            services.AddDbContext<MovieContext>(options =>
-                    options.UseSqlServer(Configuration.GetConnectionString("MovieContext")));
+            services.AddDbContext<ContactContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("ContactContext")));
 
             services.AddDbContext<UserContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("UserContext")));
@@ -62,10 +70,13 @@ namespace Dashboard
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
